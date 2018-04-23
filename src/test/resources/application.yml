@@ -1,0 +1,12 @@
+application:
+  some-property: testValue
+spring:
+  profiles:
+      include: swagger
+  data:
+      mongodb:
+          port: 0
+s3:
+  region: test
+  accessKey: testkey
+  secretKey: sectretKey

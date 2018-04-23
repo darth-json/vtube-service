@@ -1,0 +1,9 @@
+
+ ${AnsiColor.RED} __      __$ {AnsiColor.BLUE}  ________      _____  ______
+ ${AnsiColor.RED} \ \    / / ${AnsiColor.BLUE} |__   __| |  | |  _ \|  ____|
+ ${AnsiColor.RED}  \ \  / / ${AnsiColor.BLUE}_____| |  | |  | | |_) | |__
+ ${AnsiColor.RED}   \ \/ / ${AnsiColor.BLUE}______| |  | |  | |  _ <|  __|
+ ${AnsiColor.RED}    \  / ${AnsiColor.BLUE}       | |  | |__| | |_) | |____
+ ${AnsiColor.RED}     \/ ${AnsiColor.BLUE}        |_|   \____/|____/|______|
+ ${AnsiColor.BRIGHT_BLUE} Created By:${AnsiColor.RED}Jason Rall 2018
+ ${AnsiColor.DEFAULT}
