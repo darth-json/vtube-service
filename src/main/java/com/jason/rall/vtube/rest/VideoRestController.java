@@ -35,9 +35,8 @@ public class VideoRestController {
      * @return
      * @throws IOException
      */
-    @PostMapping(value = "/"    )
-    @ResponseBody
-    public ResponseEntity<Video> uploadVideo(@RequestPart(value="file") MultipartFile multipartFile) throws IOException {
+    @PostMapping(value = "/" , consumes = "multipart/form-data")
+    public ResponseEntity<Video> uploadVideo(@RequestParam(value="file") MultipartFile multipartFile) throws IOException {
         Path file = convertMultiPartToFile(multipartFile);
         Optional<Video> video = videoUploadService.createVideo(file);
         if(video.isPresent()) return ResponseEntity.ok(video.get());

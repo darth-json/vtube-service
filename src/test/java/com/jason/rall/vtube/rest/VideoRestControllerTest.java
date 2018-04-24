@@ -65,7 +65,7 @@ public class VideoRestControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
         Path testPath = Paths.get( TEMP_PATH  + "/"+ testFileName);
         assertTrue(Files.exists(testPath));
-        Files.delete(testPath); //Cleanup sure it will get removed on clean, but we don't want to wait that long
+        Files.delete(testPath);
 
     }
 
