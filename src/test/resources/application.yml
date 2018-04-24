@@ -5,7 +5,8 @@ spring:
       include: swagger
   data:
       mongodb:
-          port: 0
+          uri: mongodb://localhost:12345
+          database: VtubeTest
 s3:
   region: test
   accessKey: testkey

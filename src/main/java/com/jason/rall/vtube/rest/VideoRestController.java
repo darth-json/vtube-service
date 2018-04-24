@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/video")
 public class VideoRestController {
 
-    VideoUploadService videoUploadService;
+    private static VideoUploadService videoUploadService;
 
     public VideoRestController(VideoUploadService videoUploadService){
         this.videoUploadService = videoUploadService;
