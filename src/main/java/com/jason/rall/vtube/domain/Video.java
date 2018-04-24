@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -36,7 +37,8 @@ public class Video {
     @Field("s3file_name")
     private String s3FileName;
 
-    private File file;
+    @Field("path")
+    private String path;
 
     @Field("bitrate")
     private String bitrate;

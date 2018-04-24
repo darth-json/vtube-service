@@ -4,9 +4,10 @@ import com.jason.rall.vtube.domain.Video;
 import com.jason.rall.vtube.service.VideoUploadService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 /**
@@ -19,8 +20,11 @@ public class VideoRestController {
 
     private static VideoUploadService videoUploadService;
 
-    public VideoRestController(VideoUploadService videoUploadService){
+    private static String uploadTempFolder;
+
+    public VideoRestController(VideoUploadService videoUploadService, String uploadTempFolder){
         this.videoUploadService = videoUploadService;
+        this.uploadTempFolder = uploadTempFolder;
     }
 
     /**
@@ -33,7 +37,7 @@ public class VideoRestController {
     @PostMapping(value = "/"    )
     @ResponseBody
     public Video uploadVideo(@RequestPart(value="file") MultipartFile multipartFile) throws IOException {
-        File file = convertMultiPartToFile(multipartFile);
+        Path file = convertMultiPartToFile(multipartFile);
         Optional<Video> video = videoUploadService.createVideo(file);
         if(video.isPresent()) return video.get();
         else return null;
@@ -47,15 +51,15 @@ public class VideoRestController {
     @GetMapping(value = "/{videoId}")
     @ResponseBody
     public Video getVideo(@PathVariable String videoId) {
-        return null;
+        Optional<Video> video = videoUploadService.getVideo(videoId);
+        return video.get();
     }
 
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convFile;
+    private Path convertMultiPartToFile(MultipartFile file) throws IOException {
+        Path path = Paths.get(uploadTempFolder+ "/" +file.getOriginalFilename());
+        if (!Files.exists(path.getParent())) Files.createDirectories(path.getParent());
+        Files.write(path, file.getBytes());
+        return path;
     }
 
 

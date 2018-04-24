@@ -1,0 +1,13 @@
+application:
+  uploadTempFolder: target/test-data/tempUpload/
+spring:
+  profiles:
+      include: swagger
+  data:
+      mongodb:
+          uri: mongodb://localhost:27017
+          database: VTube
+s3:
+  region: test
+  accessKey: testkey
+  secretKey: sectretKey
