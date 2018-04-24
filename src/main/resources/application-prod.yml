@@ -7,7 +7,3 @@ spring:
       mongodb:
           uri: mongodb://mongodb:27017
           database: VTube
-s3:
-  region: us-east-2
-  accessKey: AKIAIX7AIF75FU63VPAQ
-  secretKey: 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
