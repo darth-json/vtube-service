@@ -32,12 +32,11 @@ public class VideoUploadService {
         Video video = Video.builder()
                 .path(path.toAbsolutePath().toString())
                 .fileName(path.getFileName().toString()).build();
-        return Optional.ofNullable(video);
+        return Optional.of(videoMongoRepository.save(video));
     }
 
     public Optional<Video> getVideo(@NonNull String videoId) {
         Optional<Video> video = videoMongoRepository.findById(videoId);
-        video.get().getS3FileName();
         return video;
     }
 
