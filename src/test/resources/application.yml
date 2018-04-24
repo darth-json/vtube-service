@@ -1,0 +1,19 @@
+application:
+  uploadTempFolder: target/test-data/tempUpload/
+spring:
+  profiles:
+      include: swagger
+  data:
+      mongodb:
+          port: 12345
+          database: VtubeTest
+          host: localhost
+  mongodb:
+    embedded: #pretty cool that spring brought these things in-house
+      version: 3.2.2
+      storage:
+        database-dir: target/test-data/
+s3:
+  region: test
+  accessKey: testkey
+  secretKey: sectretKey
