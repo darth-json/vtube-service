@@ -42,9 +42,9 @@ public class VideoUploadServiceTest {
     @Test
     public void createVideo() throws Exception {
         SecurityContext context = mock(SecurityContext.class);
-        Authentication authentication = new UsernamePasswordAuthenticationToken("foo","bar");
-        when(context.getAuthentication()).thenReturn(authentication);
+        when(context.getAuthentication()).thenReturn(new UsernamePasswordAuthenticationToken("foo","bar"));
         SecurityContextHolder.setContext(context);
+
         Path saveVideo = Paths.get("src/test/resources/test-data/short.m4v");
         Video v1 = Video.builder()
                 .id("foo-bar-baz-bss")
@@ -64,17 +64,17 @@ public class VideoUploadServiceTest {
 
     @Test
     public void getVideo() throws Exception {
-        Video v1 = Video.builder()
-                .id("foo-bar-baz-bss")
+        String mockId = "foo-bar-baz-bss";
+        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(Video.builder()
+                .id(mockId)
                 .fileName("foo.bar")
                 .bitrate("foo")
                 .path("test-data/short.m4v")
                 .userId("foo")
-                .build();
-        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(v1));
+                .build()));
         Optional<Video> v2 = videoService.getVideo("foo-bar-baz-bss");
         assertTrue(v2.isPresent());
-        assertEquals(v2.get().getId(), v1.getId());
+        assertEquals(v2.get().getId(), mockId);
     }
 
     @Test
@@ -82,14 +82,13 @@ public class VideoUploadServiceTest {
         Path testPath = Paths.get("src/test/resources/test-data/test.m4v");
         Files.copy(Paths.get("src/test/resources/test-data/short.m4v"),
                 testPath);
-        Video v1 = Video.builder()
-                .id("foo-bar-baz-bss")
-                .fileName("foo.bar")
-                .bitrate("foo")
-                .path(testPath.toString())
-                .userId("asdf")
-                .build();
-        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(v1));
+        when(repository.findById(anyString())).thenReturn(Optional.ofNullable( Video.builder()
+                        .id("foo-bar-baz-bss")
+                        .fileName("foo.bar")
+                        .bitrate("foo")
+                        .path(testPath.toString())
+                        .userId("asdf")
+                        .build()));
         videoService.deleteVideo("doesn't-matter-because-mocks");
         assertFalse(Files.exists(testPath)); //verify that the file has been deleted
     }

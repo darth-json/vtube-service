@@ -3,11 +3,13 @@ package com.jason.rall.vtube.rest;
 import com.jason.rall.vtube.VtubeTest;
 import com.jason.rall.vtube.domain.Video;
 import com.jason.rall.vtube.service.VideoUploadService;
+import com.jason.rall.vtube.utils.MP4Utils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mp4parser.boxes.iso14496.part12.MovieHeaderBox;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
@@ -57,7 +59,7 @@ public class VideoRestControllerTest {
     @Test
     public void testMp4Upload() throws Exception {
         String testFileName = "short_video_with_a_long_file_name_with_lots_and_lots_of_underscores.mp4";
-        MockMultipartFile file = new MockMultipartFile("file", testFileName, "audio/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
+        MockMultipartFile file = new MockMultipartFile("file", testFileName, "video/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
         Video mockResponse = Video.builder().fileName("short_video_with_a_long_file_name_with_lots_and_lots_of_underscores").build();
         when(videoUploadService.createVideo(any())).thenReturn(Optional.ofNullable(mockResponse));
         mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(file))
@@ -70,9 +72,30 @@ public class VideoRestControllerTest {
     }
 
     @Test
+    public void testMp4TooLong() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "test.mp4", "video/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
+        Video mockResponse = Video.builder().fileName("short_video_with_a_long_file_name_with_lots_and_lots_of_underscores").build();
+        MovieHeaderBox mockBox = new MovieHeaderBox();
+        mockBox.setDuration(600001);
+
+        when(videoUploadService.createVideo(any())).thenReturn(Optional.ofNullable(mockResponse));
+
+        mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(file))
+                .andExpect(status().is(200))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+
+    }
+
+    @Test
     public void testMp4NotMp4() throws Exception {
         MockMultipartFile failFile = new MockMultipartFile("data", "fail.mp4", "audio/mp4", "some text".getBytes());
         mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(failFile))
                 .andExpect(status().is(400));
+    }
+    @Test
+    public void testInvalidMp4() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "fail.mp4", "audio/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
+        mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(file))
+                .andExpect(status().is(415));
     }
 }

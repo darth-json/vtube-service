@@ -9,11 +9,7 @@ spring:
           database: VtubeTest
           host: localhost
   mongodb:
-    embedded: #pretty cool that spring brought these things in-house
+    embedded:
       version: 3.2.2
       storage:
         database-dir: target/test-data/
-s3:
-  region: test
-  accessKey: testkey
-  secretKey: sectretKey
