@@ -26,8 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsRepository accountCredentialsRepository;
 
-    @SuppressWarnings("deprecation")
     @Bean
+    @SuppressWarnings("deprecation")
     public static NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
