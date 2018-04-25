@@ -2,6 +2,7 @@ package com.jason.rall.vtube.rest;
 
 import com.jason.rall.vtube.domain.Video;
 import com.jason.rall.vtube.service.VideoUploadService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -34,13 +35,12 @@ public class VideoRestController {
      * @return
      * @throws IOException
      */
-    @PostMapping(value = "/"    )
-    @ResponseBody
-    public Video uploadVideo(@RequestPart(value="file") MultipartFile multipartFile) throws IOException {
+    @PostMapping(value = "/" , consumes = "multipart/form-data")
+    public ResponseEntity<Video> uploadVideo(@RequestParam(value="file") MultipartFile multipartFile) throws IOException {
         Path file = convertMultiPartToFile(multipartFile);
         Optional<Video> video = videoUploadService.createVideo(file);
-        if(video.isPresent()) return video.get();
-        else return null;
+        if(video.isPresent()) return ResponseEntity.ok(video.get());
+        else return ResponseEntity.unprocessableEntity().build();
     }
 
     /**
@@ -50,10 +50,18 @@ public class VideoRestController {
      */
     @GetMapping(value = "/{videoId}")
     @ResponseBody
-    public Video getVideo(@PathVariable String videoId) {
+    public ResponseEntity<Video> getVideo(@PathVariable String videoId) {
         Optional<Video> video = videoUploadService.getVideo(videoId);
-        return video.get();
+        if(video.isPresent()) return ResponseEntity.ok(video.get());
+        else return ResponseEntity.unprocessableEntity().build();
     }
+
+    @DeleteMapping(value = "/{videoId}")
+    public ResponseEntity<Void> deleteVideo(@PathVariable String videoId) throws IOException {
+        videoUploadService.deleteVideo(videoId);
+        return ResponseEntity.ok().build();
+    }
+
 
     private Path convertMultiPartToFile(MultipartFile file) throws IOException {
         Path path = Paths.get(uploadTempFolder+ "/" +file.getOriginalFilename());

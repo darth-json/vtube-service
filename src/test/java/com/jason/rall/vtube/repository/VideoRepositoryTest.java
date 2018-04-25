@@ -13,10 +13,10 @@ import java.util.Optional;
  *
  */
 
-public class VideoMongoRepositoryTest extends VtubeTest {
+public class VideoRepositoryTest extends VtubeTest {
 
     @Autowired
-    private VideoMongoRepository repository;
+    private VideoRepository repository;
 
     @Test
     public void testFindById() {

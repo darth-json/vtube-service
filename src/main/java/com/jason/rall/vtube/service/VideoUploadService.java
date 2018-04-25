@@ -1,7 +1,7 @@
 package com.jason.rall.vtube.service;
 
 import com.jason.rall.vtube.domain.Video;
-import com.jason.rall.vtube.repository.VideoMongoRepository;
+import com.jason.rall.vtube.repository.VideoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -22,28 +22,27 @@ public class VideoUploadService {
 
     private static final Logger log = LoggerFactory.getLogger(VideoUploadService.class);
 
-    private static VideoMongoRepository videoMongoRepository;
+    private static VideoRepository videoRepository;
 
-    public VideoUploadService(VideoMongoRepository videoMongoRepository) {
-        this.videoMongoRepository = videoMongoRepository;
+    public VideoUploadService(VideoRepository videoRepository) {
+        this.videoRepository = videoRepository;
     }
 
     public Optional<Video> createVideo(@NonNull Path path) {
         Video video = Video.builder()
                 .path(path.toAbsolutePath().toString())
                 .fileName(path.getFileName().toString()).build();
-        return Optional.ofNullable(video);
+        return Optional.of(videoRepository.save(video));
     }
 
     public Optional<Video> getVideo(@NonNull String videoId) {
-        Optional<Video> video = videoMongoRepository.findById(videoId);
-        video.get().getS3FileName();
+        Optional<Video> video = videoRepository.findById(videoId);
         return video;
     }
 
     public void deleteVideo(@NonNull String videoId) throws IOException {
-        Optional<Video> deleteVideo = videoMongoRepository.findById(videoId);
+        Optional<Video> deleteVideo = videoRepository.findById(videoId);
         if(deleteVideo.isPresent() && Files.exists(Paths.get(deleteVideo.get().getPath()))) Files.delete(Paths.get(deleteVideo.get().getPath()));
-        if(deleteVideo.isPresent()) videoMongoRepository.delete(deleteVideo.get());
+        if(deleteVideo.isPresent()) videoRepository.delete(deleteVideo.get());
     }
 }

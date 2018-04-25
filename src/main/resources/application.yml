@@ -1,3 +1,7 @@
 spring:
   profiles:
       include: swagger
+  servlet:
+    multipart:
+      max-file-size: 10mb
+      enabled: true

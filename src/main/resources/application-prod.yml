@@ -1,5 +1,5 @@
 application:
-  uploadTempFolder: /tmp/tempUpload/
+  uploadTempFolder: /temp/tempUpload/
 spring:
   profiles:
       include: swagger
