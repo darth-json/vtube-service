@@ -4,9 +4,9 @@ The service component of the v-tube application.
 
 ## Development
 
-To run an individual instance of v-tube locally pull [VTube] and follow the instructions. Video Metadata is extracted via [Sannies-Mp4]. To run, simply execute using
- 
- 
+To run an individual instance of v-tube locally pull [VTube] and follow the instructions. Video Metadata is extracted via [Sannies-Mp4]. To run, simply execute `mvn clean package spring-boot:run`. 
+This will 
+  
 ## Docker Image 
 
 This leverages the spotify docker plugin to build the application as a docker image :
