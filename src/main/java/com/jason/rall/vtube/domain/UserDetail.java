@@ -1,5 +1,7 @@
 package com.jason.rall.vtube.domain;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,13 +12,20 @@ import java.util.List;
  *
  * @author jrall
  */
+@Document(collection = "users")
 public class UserDetail implements UserDetails {
 
+    @Indexed(name = "username", unique = true)
     private String username;
-    private String password;
+    private String password; //todo: salt using libbcrypt
     private List<GrantedAuthority> grantedAuthorities;
 
     public UserDetail(){}
+
+    public UserDetail(String username,String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public UserDetail(String username,String password,String[] authorities) {
         this.username = username;
