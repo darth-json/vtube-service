@@ -1,7 +1,7 @@
 package com.jason.rall.vtube.service;
 
 import com.jason.rall.vtube.domain.Video;
-import com.jason.rall.vtube.repository.VideoMongoRepository;
+import com.jason.rall.vtube.repository.VideoRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class VideoUploadServiceTest {
 
     @Mock
-    VideoMongoRepository repository;
+    VideoRepository repository;
 
     @InjectMocks
     VideoUploadService videoService;

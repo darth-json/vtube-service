@@ -11,6 +11,6 @@ import java.util.Optional;
  * @author jrall
  */
 @Repository
-public interface VideoMongoRepository extends MongoRepository<Video, String> {
+public interface VideoRepository extends MongoRepository<Video, String> {
     public Optional<Video> findById(String id);
 }
