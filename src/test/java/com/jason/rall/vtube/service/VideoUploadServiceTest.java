@@ -7,6 +7,11 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +19,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -35,17 +41,25 @@ public class VideoUploadServiceTest {
 
     @Test
     public void createVideo() throws Exception {
-        Path saveVideo = Paths.get("test-data/short.m4v");
+        SecurityContext context = mock(SecurityContext.class);
+        Authentication authentication = new UsernamePasswordAuthenticationToken("foo","bar");
+        when(context.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(context);
+        Path saveVideo = Paths.get("src/test/resources/test-data/short.m4v");
         Video v1 = Video.builder()
                 .id("foo-bar-baz-bss")
                 .fileName("foo.bar")
-                .bitrate("foo")
-                .userId("asdf")
+                .bitrate("1.0")
+                .duration("6025")
+                .userId("foo")
                 .build();
-         when(repository.save(any(Video.class))).thenReturn(v1);
+        when(repository.save(any(Video.class))).thenReturn(v1);
         Optional<Video> v2 = videoService.createVideo(saveVideo);
         assertTrue(v2.isPresent());
         assertEquals(v2.get().getId(), v1.getId());
+        assertEquals(v2.get().getDuration(), v1.getDuration());
+        assertEquals(v2.get().getBitrate(), v1.getBitrate());
+        assertEquals(v2.get().getUserId(), "foo");
     }
 
     @Test
@@ -55,7 +69,7 @@ public class VideoUploadServiceTest {
                 .fileName("foo.bar")
                 .bitrate("foo")
                 .path("test-data/short.m4v")
-                .userId("asdf")
+                .userId("foo")
                 .build();
         when(repository.findById(anyString())).thenReturn(Optional.ofNullable(v1));
         Optional<Video> v2 = videoService.getVideo("foo-bar-baz-bss");
