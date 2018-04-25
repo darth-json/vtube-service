@@ -1,0 +1,9 @@
+application:
+  uploadTempFolder: /temp/tempUpload/
+spring:
+  profiles:
+      include: swagger
+  data:
+      mongodb:
+          uri: mongodb://mongodb:27017
+          database: VTube

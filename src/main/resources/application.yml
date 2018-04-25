@@ -1,0 +1,8 @@
+spring:
+  profiles:
+      include: swagger
+  servlet:
+    multipart:
+      max-file-size: 100mb
+      max-request-size: 100mb
+      enabled: true

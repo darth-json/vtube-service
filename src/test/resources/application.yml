@@ -1,0 +1,15 @@
+application:
+  uploadTempFolder: target/test-data/tempUpload/
+spring:
+  profiles:
+      include: swagger
+  data:
+      mongodb:
+          port: 12345
+          database: VtubeTest
+          host: localhost
+  mongodb:
+    embedded:
+      version: 3.2.2
+      storage:
+        database-dir: target/test-data/
