@@ -4,7 +4,7 @@ The service component of the v-tube application.
 
 ## Development
 
-To run an individual instance of v-tube locally pull [VTube] and follow the instructions. Video Metadata is extracted via [Sannies-Mp4].
+To run an individual instance of v-tube locally pull [VTube] and follow the instructions. Video Metadata is extracted via [Sannies-Mp4]. To run, simply execute using 
 
 ## Testing
 
