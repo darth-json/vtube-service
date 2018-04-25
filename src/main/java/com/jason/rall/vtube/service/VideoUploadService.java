@@ -2,9 +2,7 @@ package com.jason.rall.vtube.service;
 
 import com.jason.rall.vtube.domain.Video;
 import com.jason.rall.vtube.repository.VideoRepository;
-import org.mp4parser.Box;
-import org.mp4parser.IsoFile;
-import org.mp4parser.boxes.iso14496.part12.MovieBox;
+import com.jason.rall.vtube.utils.MP4Utils;
 import org.mp4parser.boxes.iso14496.part12.MovieHeaderBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +10,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,16 +32,8 @@ public class VideoUploadService {
         this.videoRepository = videoRepository;
     }
 
-    private MovieHeaderBox parseMetadata(Path path) throws IOException {
-        FileChannel fc = new FileInputStream(path.toFile()).getChannel();
-        IsoFile isoFile = new IsoFile(fc);
-        MovieBox moov = isoFile.getMovieBox();
-        MovieHeaderBox header = moov.getMovieHeaderBox();
-        return header;
-    }
-
     public Optional<Video> createVideo(@NonNull Path path) throws IOException {
-        MovieHeaderBox headers = parseMetadata(path);
+        MovieHeaderBox headers = MP4Utils.parseMetadata(path); //kind of a hack since I called this in the rest service.
         Video video = Video.builder()
                 .path(path.toAbsolutePath().toString())
                 .userId(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
@@ -53,6 +41,11 @@ public class VideoUploadService {
                 .duration(String.valueOf(headers.getDuration()))
                 .fileName(path.getFileName().toString()).build();
         return Optional.of(videoRepository.save(video));
+    }
+
+
+    public Optional<List<Video>> getVideos() {
+        return Optional.of(videoRepository.findAll());
     }
 
     public Optional<Video> getVideo(@NonNull String videoId) {

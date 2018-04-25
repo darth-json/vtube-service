@@ -57,7 +57,7 @@ public class VideoRestControllerTest {
     @Test
     public void testMp4Upload() throws Exception {
         String testFileName = "short_video_with_a_long_file_name_with_lots_and_lots_of_underscores.mp4";
-        MockMultipartFile file = new MockMultipartFile("file", testFileName, "audio/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
+        MockMultipartFile file = new MockMultipartFile("file", testFileName, "video/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
         Video mockResponse = Video.builder().fileName("short_video_with_a_long_file_name_with_lots_and_lots_of_underscores").build();
         when(videoUploadService.createVideo(any())).thenReturn(Optional.ofNullable(mockResponse));
         mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(file))
@@ -74,5 +74,11 @@ public class VideoRestControllerTest {
         MockMultipartFile failFile = new MockMultipartFile("data", "fail.mp4", "audio/mp4", "some text".getBytes());
         mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(failFile))
                 .andExpect(status().is(400));
+    }
+    @Test
+    public void testInvalidMp4() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "fail.mp4", "audio/mp4", Files.newInputStream(Paths.get(ClassLoader.getSystemResource(SHORT_M4V).toURI())) );
+        mvc.perform(MockMvcRequestBuilders.multipart("/api/v1/video/").file(file))
+                .andExpect(status().is(415));
     }
 }
